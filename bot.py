@@ -17,6 +17,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+	gold = 0
 	if message.content.startswith("!"):
 		msg = message.content.split(" ")
 		if msg[0] == "!뻐큐":
@@ -28,7 +29,10 @@ async def on_message(message):
 		elif msg[0] == "!함말뚝":
 			await message.channel.send("그는 완벽한 멸시장인이에요!")
 		elif msg[0] == "!단새론":
-			await message.channel.send("잠시 소강상태가 되었어요!")
+			if random.randrange(1, 10) < 3:
+				await message.channel.send("그녀는 지금 예민해졌어요!")
+			else:
+				await message.channel.send("잠시 소강상태가 되었어요!")
 		elif msg[0] == "!이호진":
 			await message.channel.send("장인의 기운이 쌓이고 있어요!")
 		elif msg[0] == "!전사김종성":
@@ -159,13 +163,19 @@ async def on_message(message):
 				str = str[:len(str) - 2]
 				str += "\n"
 			await message.channel.send(str)
-
+		elif msg[0] == "!골드":
+			if msg[1].isdigit():
+				await message.channel.send("오늘의 골드 가격이" + msg[1] + "로 입력되었습니다. 이제 !마리 를 입력해보세요!")
+				gold = int(msg[1]) * 0.95
+				print(gold)
+			else:
+				await message.channel.send("오늘의 크리스탈 구매 가격을 알려주세요! (숫자)")
 		else:
 			await message.channel.send("아직 정신개조를 받는 중이라 모르는 단어가 많아요!")
 			str = "```*---명령어---*\n"
-			str += "!주사위 !전정 [닉네임] !마리 !캘린더 !미스틱\n\n"
+			str += "!주사위 !전정 [닉네임] !마리 !캘린더 !미스틱 !골드 [숫자]\n\n"
 			str += "*---정보---*\n"
 			str += "!뻐큐 !공포의로붕이 !ㅈㅁ !함말뚝 !단새론 !이호진 !전사김종성 !전김 !당진스라소니 !동물맨 !아르카라마 !짱쭌이 !로붕이```"
 			await message.channel.send(str)
 
-client.run("Token")
+client.run("Njc0MTU3MzI5NzU5MDc2MzUy.XjmTeQ.h5qD0Q2q18j4enHG5E4Dn3uAn80")
