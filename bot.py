@@ -168,4 +168,4 @@ async def on_message(message):
 			str += "!뻐큐 !공포의로붕이 !ㅈㅁ !함말뚝 !단새론 !이호진 !전사김종성 !전김 !당진스라소니 !동물맨 !아르카라마 !짱쭌이 !로붕이```"
 			await message.channel.send(str)
 
-client.run("Njc0MTU3MzI5NzU5MDc2MzUy.XjlLaA.fnquY58NsbZ9AuCDCudoTF8dE9k")
+client.run("Token")
