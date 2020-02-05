@@ -7,6 +7,7 @@ import random
 import time
 
 client = discord.Client()
+gold = 0
 
 @client.event
 async def on_ready():
@@ -17,7 +18,6 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-	gold = 0
 	if message.content.startswith("!"):
 		msg = message.content.split(" ")
 		if msg[0] == "!뻐큐":
@@ -118,6 +118,13 @@ async def on_message(message):
 				resText += "\n"
 			await message.channel.send(resText)
 		elif msg[0] == "!마리":
+			gold = 0
+			if len(msg) < 2:
+				await message.channel.send("명령어를 !마리 [현재 크리스탈 구매 가격]으로 입력하면 마리의 상점 가격을 골드로 환산할 수 있어요!")
+			elif msg[1].isdigit():
+				gold = int(msg[1])
+			else:
+				await message.channel.send("명령어를 !마리 [현재 크리스탈 구매 가격]으로 입력하면 마리의 상점 가격을 골드로 환산할 수 있어요!")
 			mariUrl = "https://lostark.game.onstove.com/Shop/Mari"
 			req = urllib.request.urlopen(mariUrl)
 			res = req.read()
@@ -126,9 +133,11 @@ async def on_message(message):
 			itemName = [each_line.get_text().strip() for each_line in itemName[:20]]
 			itemPrice = soup.find_all('span', class_='amount')  # 데이터에서 태그와 클래스를 찾는 함수
 			itemPrice = [each_line.get_text().strip() for each_line in itemPrice[:20]]
-			str = ""
+			str = "```"
 			for i in range(0, 6):
-				str += itemName[i] + "[" + itemPrice[i] + "개]\n"
+				str += itemName[i] + "[크리스탈 " + itemPrice[i] + "개] = " + repr(int(int(itemPrice[i]) * (gold / 95.0))) + "골드\n"
+				print(itemPrice[i] + " " + repr(gold))
+			str += "```"
 			await message.channel.send(str)
 		elif msg[0] == "!주사위":
 			r = random.randrange(1,100)
@@ -154,7 +163,7 @@ async def on_message(message):
 			req = urllib.request.urlopen(url)
 			res = req.read()
 			soup = BeautifulSoup(res, 'html.parser')  # BeautifulSoup 객체생성
-			str = "이제 곧 시작되는 10개의 캘린더입니다.\n"
+			str = "```이제 곧 시작되는 10개의 캘린더입니다.\n"
 			tm = soup.find_all('a', class_='info')
 			tm = [each_line.get_text().strip() for each_line in tm[:10]]
 			for i in tm:
@@ -162,14 +171,8 @@ async def on_message(message):
 					str += j + " - "
 				str = str[:len(str) - 2]
 				str += "\n"
+			str += "```"
 			await message.channel.send(str)
-		elif msg[0] == "!골드":
-			if msg[1].isdigit():
-				await message.channel.send("오늘의 골드 가격이" + msg[1] + "로 입력되었습니다. 이제 !마리 를 입력해보세요!")
-				gold = int(msg[1]) * 0.95
-				print(gold)
-			else:
-				await message.channel.send("오늘의 크리스탈 구매 가격을 알려주세요! (숫자)")
 		else:
 			await message.channel.send("아직 정신개조를 받는 중이라 모르는 단어가 많아요!")
 			str = "```*---명령어---*\n"
@@ -178,4 +181,4 @@ async def on_message(message):
 			str += "!뻐큐 !공포의로붕이 !ㅈㅁ !함말뚝 !단새론 !이호진 !전사김종성 !전김 !당진스라소니 !동물맨 !아르카라마 !짱쭌이 !로붕이```"
 			await message.channel.send(str)
 
-client.run("Njc0MTU3MzI5NzU5MDc2MzUy.XjmTeQ.h5qD0Q2q18j4enHG5E4Dn3uAn80")
+client.run("TOKEN")
