@@ -136,7 +136,6 @@ async def on_message(message):
 			str = "```"
 			for i in range(0, 6):
 				str += itemName[i] + "[크리스탈 " + itemPrice[i] + "개] = " + repr(int(int(itemPrice[i]) * (gold / 95.0))) + "골드\n"
-				print(itemPrice[i] + " " + repr(gold))
 			str += "```"
 			await message.channel.send(str)
 		elif msg[0] == "!주사위":
@@ -176,7 +175,7 @@ async def on_message(message):
 		else:
 			await message.channel.send("아직 정신개조를 받는 중이라 모르는 단어가 많아요!")
 			str = "```*---명령어---*\n"
-			str += "!주사위 !전정 [닉네임] !마리 !캘린더 !미스틱 !골드 [숫자]\n\n"
+			str += "!주사위 !전정 [닉네임] !마리 [골드 가격] !캘린더 !미스틱\n\n"
 			str += "*---정보---*\n"
 			str += "!뻐큐 !공포의로붕이 !ㅈㅁ !함말뚝 !단새론 !이호진 !전사김종성 !전김 !당진스라소니 !동물맨 !아르카라마 !짱쭌이 !로붕이```"
 			await message.channel.send(str)
