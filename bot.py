@@ -48,10 +48,9 @@ async def on_message(message):
 		elif msg[0] == "!짱쭌이":
 			await message.channel.send("사사게를 리프레쉬 해봐야겠어요!")
 		elif msg[0] == "!전정":
-			resText = ""
+			resText = "```"
 			profileUrl = "https://lostark.game.onstove.com/Profile/Character/"
-			await message.channel.send(msg[1] + "님의 전투정보실 링크에요!")
-			await message.channel.send(profileUrl + msg[1])
+			await message.channel.send(msg[1] + "님의 전투정보실 링크에요!\n" + profileUrl + msg[1] + "\n각인은 제대로 표시되지 않을 수 있다는 점! 알아두세용!\n")
 			encStr = parse.quote(msg[1])
 			profileUrl = profileUrl + encStr
 			req = urllib.request.urlopen(profileUrl)
@@ -116,6 +115,7 @@ async def on_message(message):
 					resText += j + " - "
 				resText = resText[:len(resText) - 2]
 				resText += "\n"
+			resText += "```"
 			await message.channel.send(resText)
 		elif msg[0] == "!마리":
 			gold = 0
