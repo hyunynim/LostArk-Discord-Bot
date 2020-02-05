@@ -172,10 +172,23 @@ async def on_message(message):
 				str += "\n"
 			str += "```"
 			await message.channel.send(str)
+		elif msg[0] == "!골드":
+			gold = 0
+			if len(msg) < 2:
+				await message.channel.send("명령어를 !골드 [크리스탈 판매 가격]으로 입력하면 어떻게 골드를 구매하는 것이 더 흑우가 될 수 있는 지 알 수 있어요!")
+			elif msg[1].isdigit():
+				gold = int(msg[1])
+				str = "```"
+				str += "로얄 크리스탈로 구매 시 100골드당 " + repr(int(2750 / (gold / 100.0))) + "원 + 마일리지\n"
+				str += "로얄 크리스탈 에그머니로 구매 시 100골드당 " + repr(int(2475 / (gold / 100.0))) + "원 + 마일리지```"
+				await message.channel.send(str)
+			else:
+				await message.channel.send("명령어를 !골드 [크리스탈 판매 가격]으로 입력하면 어떻게 골드를 구매하는 것이 더 흑우가 될 수 있는 지 알 수 있어요!")
+
 		else:
 			await message.channel.send("아직 정신개조를 받는 중이라 모르는 단어가 많아요!")
 			str = "```*---명령어---*\n"
-			str += "!주사위 !전정 [닉네임] !마리 [골드 가격] !캘린더 !미스틱\n\n"
+			str += "!주사위 !전정 [닉네임] !마리 [크리스탈 구매 가격] !캘린더 !미스틱 !골드 [크리스탈 판매 가격]\n\n"
 			str += "*---정보---*\n"
 			str += "!뻐큐 !공포의로붕이 !ㅈㅁ !함말뚝 !단새론 !이호진 !전사김종성 !전김 !당진스라소니 !동물맨 !아르카라마 !짱쭌이 !로붕이```"
 			await message.channel.send(str)
