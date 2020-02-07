@@ -29,10 +29,17 @@ async def on_message(message):
 		elif msg[0] == "!함말뚝":
 			await message.channel.send("그는 완벽한 멸시장인이에요!")
 		elif msg[0] == "!단새론":
-			if random.randrange(1, 10) < 3:
-				await message.channel.send("그녀는 지금 예민해졌어요!")
+			if len(msg) < 2:
+				if random.randrange(1, 10) <= 5:
+					await message.channel.send("그녀는 지금 예민해졌어요!")
+				else:
+					await message.channel.send("잠시 소강상태가 되었어요!")
 			else:
-				await message.channel.send("잠시 소강상태가 되었어요!")
+				if msg[1] == "강화":
+					r = random.randrange(1,100)
+					await message.channel.send("단새론 님의 강화 성공확률은 ~~~~ " + repr(r) + " 입니다.")
+					if r <= 10:
+						await message.channel.send("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ")
 		elif msg[0] == "!이호진":
 			await message.channel.send("장인의 기운이 쌓이고 있어요!")
 		elif msg[0] == "!전사김종성":
@@ -46,7 +53,16 @@ async def on_message(message):
 		elif msg[0] == "!아르카라마":
 			await message.channel.send("모코코 좀 그만 캐세요!")
 		elif msg[0] == "!짱쭌이":
-			await message.channel.send("사사게를 리프레쉬 해봐야겠어요!")
+			if len(msg) < 2:
+				await message.channel.send("사사게를 리프레쉬 해봐야겠어요!")
+			else:
+				if msg[1] == "강화":
+					r = random.randrange(1,100)
+					await message.channel.send("짱쭌이 님의 강화 성공확률은 ~~~~ " + repr(r) + " 입니다.")
+					if r <= 10:
+						await message.channel.send("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ")
+		elif msg[0] == "!비슈타르":
+			await message.channel.send("등장!")
 		elif msg[0] == "!전정":
 			resText = "```"
 			profileUrl = "https://lostark.game.onstove.com/Profile/Character/"
@@ -184,10 +200,32 @@ async def on_message(message):
 				await message.channel.send(str)
 			else:
 				await message.channel.send("명령어를 !골드 [크리스탈 판매 가격]으로 입력하면 어떻게 골드를 구매하는 것이 더 흑우가 될 수 있는 지 알 수 있어요!")
-
+		elif msg[0] == "!강화":
+			if len(msg) < 2:
+				await message.channel.send("명령어를 !강화 [확률]로 입력하면 강화 시뮬레이션을 해볼 수 있어요!")
+			elif msg[1].isdigit():
+				r = random.randrange(1,100)
+				await message.channel.send("강화 결과는...")
+				time.sleep(2 + random.randrange(2, 4))
+				await message.channel.send("성공!" if r <= int(msg[1]) else "장인의 기운이 쌓여가네요..")
+			else:
+				await message.channel.send("명령어를 !골드 [크리스탈 판매 가격]으로 입력하면 어떻게 골드를 구매하는 것이 더 흑우가 될 수 있는 지 알 수 있어요!")
+		elif msg[0] == "!정보":
+			url = "https://github.com/hyunynim/LostArk-Discord-Bot/blob/master/README.md"
+			req = urllib.request.urlopen(url)
+			res = req.read()
+			soup = BeautifulSoup(res, 'html.parser')  # BeautifulSoup 객체생성
+			str = "```유머 노예봇 정보입니다.\n"
+			info = soup.find_all('article', class_='markdown-body entry-content p-3 p-md-6')
+			info = [each_line.get_text().strip() for each_line in info[:]]
+			for i in info:
+				str += i
+			str += "```"
+			await message.channel.send(str)
+			await message.channel.send("이 내용은 https://github.com/hyunynim/LostArk-Discord-Bot/blob/master/README.md 에서도 확인할 수 있습니다.")
 		else:
 			await message.channel.send("아직 정신개조를 받는 중이라 모르는 단어가 많아요!")
-			str = "```*---명령어---*\n"
+			str = "```\n!정보\n*---명령어---*\n"
 			str += "!주사위 !전정 [닉네임] !마리 [크리스탈 구매 가격] !캘린더 !미스틱 !골드 [크리스탈 판매 가격]\n\n"
 			str += "*---정보---*\n"
 			str += "!뻐큐 !공포의로붕이 !ㅈㅁ !함말뚝 !단새론 !이호진 !전사김종성 !전김 !당진스라소니 !동물맨 !아르카라마 !짱쭌이 !로붕이```"
