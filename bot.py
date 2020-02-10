@@ -24,6 +24,8 @@ async def on_message(message):
 			await message.channel.send("맛있네요!")
 		elif msg[0] == "!공포의로붕이":
 			await message.channel.send("저런.. 또 실패하셨나요?")
+		elif msg[0] == "!등장":
+			await message.channel.send("-비슈타르-")
 		elif msg[0] == "!ㅈㅁ":
 			await message.channel.send("마스터께서는 아라드 대륙을 수호하고 계세요!")
 		elif msg[0] == "!함말뚝":
@@ -223,6 +225,8 @@ async def on_message(message):
 			str += "```"
 			await message.channel.send(str)
 			await message.channel.send("이 내용은 https://github.com/hyunynim/LostArk-Discord-Bot/blob/master/README.md 에서도 확인할 수 있습니다.")
+		elif msg[0] == "!p" or msg[0] == "!s":
+			print('Music bot skip mode')
 		else:
 			await message.channel.send("아직 정신개조를 받는 중이라 모르는 단어가 많아요!")
 			str = "```\n!정보\n*---명령어---*\n"
