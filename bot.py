@@ -18,7 +18,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-        if message.content.startswith("@"):
+        if message.content.startswith("!"):
                 msg = message.content.split(" ")
                 if msg[0] == "!뻐큐":
                         await message.channel.send("맛있네요!")
@@ -225,12 +225,26 @@ async def on_message(message):
                         str += "```"
                         await message.channel.send(str)
                         await message.channel.send("이 내용은 https://github.com/hyunynim/LostArk-Discord-Bot/blob/master/README.md 에서도 확인할 수 있습니다.")
-                elif msg[0] == "!p" or msg[0] == "!s":
+                elif msg[0] == "!p" or msg[0] == "!s" or ('0' <= msg[0][1] and msg[0][1] <= '9'):
                         print('Music bot skip mode')
-                elif msg[0] == "@길드원":
-                        f = open("member.txt", 'r')
-                        member = f.readlines()
+                elif msg[0] == "!길드원":
+                        try:
+                                f = open("memberList.txt", 'r')
+                        except:
+                                await message.channel.send("```\n길드원 목록을 불러올 수 없습니다.\n@길드원업데이트 명령어를 이용하여 목록을 업데이트해주세요\n```")
+                                return
                         resText = "```\n현재까지 추가된 길드원 목록입니다.\n"
+                        memberList = f.readlines()
+                        for member in memberList:
+                                resText += member
+                        f.close()
+                        resText += "```"
+                        await message.channel.send(resText)
+                elif msg[0] == "!길드원업데이트":
+                        await message.channel.send("```\n길드원 목록을 업데이트합니다.\n업데이트에는 다소 시간이 소요될 수 있습니다.```")
+                        f = open("member.txt", 'r')
+                        f2 = open("memberList.txt", 'w')
+                        member = f.readlines()
                         for name in member:
                                 profileUrl = "https://lostark.game.onstove.com/Profile/Character/"
                                 name = name.rstrip()
@@ -243,11 +257,11 @@ async def on_message(message):
                                 className = [each_line.get_text().strip() for each_line in className[:20]]
                                 levelInfoItem = soup.find_all('div', class_='level-info__item')
                                 levelInfoItem = [each_line.get_text().strip() for each_line in levelInfoItem[:20]]
-                                resText += levelInfoItem[0][6:] + "\t" + className[0][3:] + "\t\t" + name + "\n"
+                                f2.writelines(name + "\t" + className[0][3:] + "\t" + levelInfoItem[0][6:] + "\n")
                         f.close()
-                        resText += "```"
-                        await message.channel.send(resText)
-                elif msg[0] == "@길드원추가":
+                        f2.close()
+                        await message.channel.send("```\n길드원 목록 업데이트가 완료되었습니다.\n@길드원 명령어를 통해 확인하실 수 있습니다.\n```")
+                elif msg[0] == "!길드원추가":
                         chk = 0
                         f = open("member.txt", 'r')
                         member = f.readlines()
@@ -264,7 +278,7 @@ async def on_message(message):
                                 await message.channel.send("추가되었습니다.")
                                 f.write(msg[1] + "\n")
                         f.close()
-                elif msg[0] == "@길드원삭제":
+                elif msg[0] == "!길드원삭제":
                         f = open("member.txt", 'r')
                         member = f.readlines()
                         f.close()
@@ -279,7 +293,8 @@ async def on_message(message):
                 else:
                         await message.channel.send(msg)
                         str = "```\n!정보\n*---명령어---*\n"
-                        str += "!주사위 !전정 [닉네임] !마리 [크리스탈 구매 가격] !캘린더 !미스틱 !골드 [크리스탈 판매 가격 !강화 [확률]] !길드\n\n"
+                        str += "!주사위 !전정 [닉네임] !마리 [크리스탈 구매 가격] !캘린더 !미스틱 !골드 [크리스탈 판매 가격\n"
+                        str += "!강화 [확률]] !길드원 !길드원업데이트 !길드원추가 [닉네임] !길드원삭제 [닉네임]\n\n"
                         str += "*---정보---*\n"
                         str += "!뻐큐 !공포의로붕이 !ㅈㅁ !함말뚝 !단새론 !이호진 !전사김종성 !전김 !당진스라소니 !동물맨 !아르카라마 !짱쭌이 !로붕이```"
                         await message.channel.send(str)
