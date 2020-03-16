@@ -266,18 +266,20 @@ async def on_message(message):
                         f = open("member.txt", 'r')
                         member = f.readlines()
                         f.close()
-                        f = open("member.txt", 'w')
                         for name in member:
                                 name = name.rstrip()
                                 if name == msg[1]:
                                         await message.channel.send("이미 추가된 길드원입니다.")
                                         chk = 1
                                         break
-                                f.write(name + "\n")
                         if chk == 0:
-                                await message.channel.send("추가되었습니다.")
+                                f = open("member.txt", 'w')
+                                for name in member:
+                                        name = name.rstrip()
+                                        f.write(name + "\n")
                                 f.write(msg[1] + "\n")
-                        f.close()
+                                await message.channel.send("추가되었습니다.")
+                                f.close()
                 elif msg[0] == "!길드원삭제":
                         f = open("member.txt", 'r')
                         member = f.readlines()
@@ -297,5 +299,5 @@ async def on_message(message):
                         str += "!강화 [확률]] !길드원 !길드원업데이트 !길드원추가 [닉네임] !길드원삭제 [닉네임]\n\n"
                         str += "*---정보---*\n"
                         str += "!뻐큐 !공포의로붕이 !ㅈㅁ !함말뚝 !단새론 !이호진 !전사김종성 !전김 !당진스라소니 !동물맨 !아르카라마 !짱쭌이 !로붕이```"
-                        await message.channel.send(str)
+                        await message.channel.send(str
 client.run("TOKEN")
