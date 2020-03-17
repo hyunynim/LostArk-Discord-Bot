@@ -250,6 +250,7 @@ async def on_message(message):
                         f = open("member.txt", 'r')
                         f2 = open("memberList.csv", 'w')
                         member = f.readlines()
+                        memberInfoList = []
                         for name in member:
                                 profileUrl = "https://lostark.game.onstove.com/Profile/Character/"
                                 name = name.rstrip()
@@ -265,7 +266,12 @@ async def on_message(message):
                                 levelInfoItem[0] = levelInfoItem[0][6:].replace(",","")
                                 tmpList = levelInfoItem[0].split(".")
                                 level = tmpList[0]
-                                f2.writelines(name + "," + className[0][3:] + "," + level + "\n")
+                                memberInfoList.append((name, className[0][3:], int(level)))
+                        memberInfoList.sort(key=lambda memberInfoList: memberInfoList[2])
+                        memberInfoList.reverse()
+                        for mem in memberInfoList:
+                                lvl = "%d" % (mem[2])
+                                f2.writelines(mem[0] + "," + mem[1] + "," + lvl + "\n")
                         f.close()
                         f2.close()
                         await message.channel.send("```\n길드원 목록 업데이트가 완료되었습니다.\n@길드원 명령어를 통해 확인하실 수 있습니다.\n```")
