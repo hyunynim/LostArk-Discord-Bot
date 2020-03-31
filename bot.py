@@ -34,7 +34,7 @@ async def GetCharacterInfo(name):
 
 @client.event
 async def on_message(message):
-        if message.content.startswith("@"):
+        if message.content.startswith("!"):
                 msg = message.content.split(" ")
                 msg[0] = msg[0][1:]
                 if msg[0] == "뻐큐":
