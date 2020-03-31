@@ -4,7 +4,7 @@ import urllib.request
 from bs4 import BeautifulSoup
 from urllib import parse
 import random
-import time
+from time import time
 
 client = discord.Client()
 gold = 0
@@ -15,10 +15,26 @@ async def on_ready():
     print("ready")
     game = discord.Game("정신개조 의자에 앉아서 생각")
     await client.change_presence(status=discord.Status.online, activity=game)
+async def GetCharacterInfo(name):
+        profileUrl = "https://lostark.game.onstove.com/Profile/Character/"
+        name = name.rstrip()
+        encStr = parse.quote(name)
+        profileUrl = profileUrl + encStr
+        req = urllib.request.urlopen(profileUrl)
+        res = req.read()
+        soup = BeautifulSoup(res, 'html.parser')  # BeautifulSoup 객체생성
+        className = soup.find_all('div', class_='game-info__class')
+        className = [each_line.get_text().strip() for each_line in className[:20]]
+        levelInfoItem = soup.find_all('div', class_='level-info__item')
+        levelInfoItem = [each_line.get_text().strip() for each_line in levelInfoItem[:20]]
+        levelInfoItem[0] = levelInfoItem[0][6:].replace(",", "")
+        tmpList = levelInfoItem[0].split(".")
+        level = tmpList[0]
+        return (int(level), className[0][3:], name)
 
 @client.event
 async def on_message(message):
-        if message.content.startswith("!"):
+        if message.content.startswith("@"):
                 msg = message.content.split(" ")
                 msg[0] = msg[0][1:]
                 if msg[0] == "뻐큐":
@@ -232,7 +248,7 @@ async def on_message(message):
                         try:
                                 f = open("memberList.csv", 'r')
                         except:
-                                await message.channel.send("```\n길드원 목록을 불러올 수 없습니다.\n@길드원업데이트 명령어를 이용하여 목록을 업데이트해주세요\n```")
+                                await message.channel.send("```\n길드원 목록을 불러올 수 없습니다.\n!길드원업데이트 명령어를 이용하여 목록을 업데이트해주세요\n```")
                                 return
                         resText = "```\n현재까지 추가된 길드원 목록입니다.\n"
                         memberList = f.readlines()
@@ -251,30 +267,16 @@ async def on_message(message):
                         f2 = open("memberList.csv", 'w')
                         member = f.readlines()
                         memberInfoList = []
-                        for name in member:
-                                profileUrl = "https://lostark.game.onstove.com/Profile/Character/"
-                                name = name.rstrip()
-                                encStr = parse.quote(name)
-                                profileUrl = profileUrl + encStr
-                                req = urllib.request.urlopen(profileUrl)
-                                res = req.read()
-                                soup = BeautifulSoup(res, 'html.parser')  # BeautifulSoup 객체생성
-                                className = soup.find_all('div', class_='game-info__class')
-                                className = [each_line.get_text().strip() for each_line in className[:20]]
-                                levelInfoItem = soup.find_all('div', class_='level-info__item')
-                                levelInfoItem = [each_line.get_text().strip() for each_line in levelInfoItem[:20]]
-                                levelInfoItem[0] = levelInfoItem[0][6:].replace(",","")
-                                tmpList = levelInfoItem[0].split(".")
-                                level = tmpList[0]
-                                memberInfoList.append((name, className[0][3:], int(level)))
+                        result = [asyncio.ensure_future(GetCharacterInfo(name)) for name in member]
+                        memberInfoList = await asyncio.gather(*result)
                         memberInfoList.sort(key=lambda memberInfoList: memberInfoList[2])
                         memberInfoList.reverse()
                         for mem in memberInfoList:
-                                lvl = "%d" % (mem[2])
-                                f2.writelines(mem[0] + "," + mem[1] + "," + lvl + "\n")
+                                lvl = "%d" % (mem[0])
+                                f2.writelines(lvl + "," + mem[1] + "," + mem[2] + "\n")
                         f.close()
                         f2.close()
-                        await message.channel.send("```\n길드원 목록 업데이트가 완료되었습니다.\n@길드원 명령어를 통해 확인하실 수 있습니다.\n```")
+                        await message.channel.send("```\n길드원 목록 업데이트가 완료되었습니다.\n!길드원 명령어를 통해 확인하실 수 있습니다.\n```")
                 elif msg[0] == "길드원추가":
                         chk = 0
                         f = open("member.txt", 'r')
